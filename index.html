@@ -21,25 +21,29 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
-        overflow: hidden;
+        min-height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
         position: relative;
       }
 
       .container {
         text-align: center;
+        max-width: 100%;
         z-index: 2;
       }
 
       .welcome-popup,
       .birthday-card {
-        margin: 30px;
+        margin: 30px auto;
         display: none;
         background: #fff;
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         z-index: 2;
+        max-width: 90%;
+        word-wrap: break-word;
       }
 
       .welcome-popup {
@@ -159,9 +163,26 @@
           opacity: 1;
         }
       }
+
+      @media (max-width: 768px) {
+        .mailbox {
+          font-size: 80px;
+        }
+        .balloon {
+          font-size: 40px;
+        }
+        .welcome-popup,
+        .birthday-card {
+          padding: 15px;
+          margin: 20px;
+        }
+      }
     </style>
   </head>
   <body>
+    <audio autoplay loop>
+      <source src="hbd.mp3" type="audio/mp3" />
+    </audio>
     <div class="container">
       <div class="welcome-popup" id="welcomePopup">
         <p>
@@ -175,6 +196,7 @@
       <div class="birthday-card" id="birthdayCard">
         <div class="card-content">
           <p>Happy Birthday!</p>
+          <em>"17-01-2025"</em>
           <p>
             Today is a day full of joy, as the world is blessed with your
             presence. I want to thank you for all the kindness and love you’ve
@@ -191,7 +213,7 @@
             deserve. Thank you for being such an important part of my life. I
             feel incredibly lucky to know you, and I hope we continue to share
             laughter, stories, and happiness together. Happy Birthday! May your
-            days be filled with abundant love. <br />With all my love
+            days be filled with abundant love. <br />With all my love ❤️
           </p>
           <i
             class="fas fa-birthday-cake"
@@ -218,6 +240,7 @@
         welcomePopup.style.display = "none";
         birthdayCard.style.display = "block";
         mailbox.style.display = "none";
+        document.body.style.overflowY = "auto"; // Allow scrolling when birthday card is displayed
       });
     </script>
   </body>
