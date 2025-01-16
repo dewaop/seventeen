@@ -180,7 +180,7 @@
     </style>
   </head>
   <body>
-    <audio autoplay loop>
+     <audio id="birthdayAudio" autoplay loop>
       <source src="hbd.mp3" type="audio/mp3" />
     </audio>
     <div class="container">
@@ -236,11 +236,14 @@
       const mailbox = document.getElementById("mailbox");
       const birthdayCard = document.getElementById("birthdayCard");
 
+     const audio = new Audio("hbd.mp3");
+
       mailbox.addEventListener("click", () => {
+        audio.play();
         welcomePopup.style.display = "none";
         birthdayCard.style.display = "block";
         mailbox.style.display = "none";
-        document.body.style.overflowY = "auto"; // Allow scrolling when birthday card is displayed
+        document.body.style.overflowY = "auto"; 
       });
     </script>
   </body>
