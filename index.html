@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Birthday Card</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Pacifico", cursive;
+        background: #fdf6e3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .container {
+        text-align: center;
+        z-index: 2;
+      }
+
+      .welcome-popup,
+      .birthday-card {
+        margin: 30px;
+        display: none;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        z-index: 2;
+      }
+
+      .welcome-popup {
+        display: block;
+      }
+
+      .mailbox {
+        margin-top: 20px;
+        font-size: 100px;
+        color: #f39c12;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        z-index: 3;
+      }
+
+      .mailbox:hover {
+        transform: scale(1.1);
+      }
+
+      .birthday-card {
+        animation: fadeIn 2s;
+      }
+
+      .balloons {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .balloon {
+        position: absolute;
+        font-size: 50px;
+        color: #e74c3c;
+        animation: shakeBalloons 2s ease-in-out infinite;
+        z-index: 2;
+      }
+
+      @keyframes shakeBalloons {
+        0% {
+          transform: rotate(0deg);
+        }
+        25% {
+          transform: rotate(10deg);
+        }
+        50% {
+          transform: rotate(0deg);
+        }
+        75% {
+          transform: rotate(-10deg);
+        }
+        100% {
+          transform: rotate(0deg);
+        }
+      }
+
+      .balloon-1 {
+        left: 10%;
+        animation-delay: 0s;
+      }
+      .balloon-2 {
+        left: 20%;
+        animation-delay: 0.5s;
+      }
+      .balloon-3 {
+        left: 30%;
+        animation-delay: 1s;
+      }
+      .balloon-4 {
+        left: 40%;
+        animation-delay: 1.5s;
+      }
+      .balloon-5 {
+        left: 50%;
+        animation-delay: 2s;
+      }
+
+      .balloon-1-bottom {
+        bottom: 5%;
+        left: 10%;
+        animation-delay: 0s;
+        z-index: 2;
+      }
+      .balloon-2-bottom {
+        bottom: 5%;
+        left: 70%;
+        animation-delay: 0.5s;
+        z-index: 2;
+      }
+      .balloon-3-bottom {
+        bottom: 5%;
+        left: 80%;
+        animation-delay: 1s;
+        z-index: 2;
+      }
+      .balloon-4-bottom {
+        bottom: 5%;
+        left: 90%;
+        animation-delay: 1.5s;
+        z-index: 2;
+      }
+      .balloon-5-bottom {
+        bottom: 5%;
+        left: 100%;
+        animation-delay: 2s;
+        z-index: 2;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="welcome-popup" id="welcomePopup">
+        <p>
+          Hii Penguin! <br />
+          Click on the mailbox and I will tell you something.
+        </p>
+      </div>
+      <div class="mailbox" id="mailbox">
+        <i class="fas fa-envelope"></i>
+      </div>
+      <div class="birthday-card" id="birthdayCard">
+        <div class="card-content">
+          <p>Happy Birthday!</p>
+          <p>
+            Today is a day full of joy, as the world is blessed with your
+            presence. I want to thank you for all the kindness and love you’ve
+            shared with me. Every step you take in life teaches us to be more
+            patient, more appreciative, and more loving. I hope that every wish
+            you hold in your heart comes true, one by one. May you continue to
+            be given the strength to overcome any challenge, and may your life
+            be filled with true happiness. There are no words that can fully
+            express how much you mean to me. Your presence is the greatest gift,
+            not only on your birthday, but every day. I pray that God continues
+            to protect you, bless you with endless happiness, and surround you
+            with an abundance of blessings at every step of your journey. May
+            each year bring you closer to your dreams and the happiness you
+            deserve. Thank you for being such an important part of my life. I
+            feel incredibly lucky to know you, and I hope we continue to share
+            laughter, stories, and happiness together. Happy Birthday! May your
+            days be filled with abundant love. <br />With all my love
+          </p>
+          <i
+            class="fas fa-birthday-cake"
+            style="font-size: 80px; color: #ff3636"
+          ></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="balloons">
+      <i class="fas fa-gift balloon balloon-1"></i>
+      <i class="fas fa-gift balloon balloon-5" style="left: 90%"></i>
+
+      <i class="fas fa-gift balloon balloon-1-bottom"></i>
+      <i class="fas fa-gift balloon balloon-4-bottom"></i>
+    </div>
+
+    <script>
+      const welcomePopup = document.getElementById("welcomePopup");
+      const mailbox = document.getElementById("mailbox");
+      const birthdayCard = document.getElementById("birthdayCard");
+
+      mailbox.addEventListener("click", () => {
+        welcomePopup.style.display = "none";
+        birthdayCard.style.display = "block";
+        mailbox.style.display = "none";
+      });
+    </script>
+  </body>
+</html>
