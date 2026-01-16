@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Birthday Mission 🎂</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+      .fade {
+        animation: fadeIn 0.6s ease;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .option {
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid #ddd;
+        transition: 0.2s;
+      }
+      .option:hover {
+        background: #fce7f3;
+      }
+      .selected {
+        background: #fbcfe8;
+        border-color: #ec4899;
+      }
+      .disabled {
+        opacity: 0.4;
+        pointer-events: none;
+      }
+      .typing::after {
+        content: "|";
+        animation: blink 1s infinite;
+      }
+      @keyframes blink {
+        0%,
+        50%,
+        100% {
+          opacity: 1;
+        }
+        25%,
+        75% {
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body
+    class="bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 min-h-screen flex items-center justify-center px-4"
+  >
+    <!-- 🎵 MUSIC -->
+    <audio autoplay loop>
+      <source src="blue.mp3" type="audio/mpeg" />
+    </audio>
+
+    <div class="bg-white shadow-xl rounded-2xl w-full max-w-xl p-6 fade">
+      <div id="content"></div>
+
+      <div class="mt-6 flex justify-between" id="nav">
+        <button id="prevBtn" class="hidden px-4 py-2 rounded-lg bg-gray-200">
+          ⬅ Kembali
+        </button>
+        <button
+          id="nextBtn"
+          class="px-4 py-2 rounded-lg bg-pink-500 text-white disabled"
+        >
+          Lanjut ➡
+        </button>
+      </div>
+    </div>
+
+    <script>
+      let step = 0;
+      let submitted = false;
+
+      let answers = {
+        location: "",
+        missLevel: null,
+        hardest: "",
+        firstMeet: "",
+      };
+
+      const content = document.getElementById("content");
+      const nextBtn = document.getElementById("nextBtn");
+      const prevBtn = document.getElementById("prevBtn");
+      const nav = document.getElementById("nav");
+
+      function enableNext(condition) {
+        nextBtn.classList.toggle("disabled", !condition);
+      }
+
+      function render() {
+        content.classList.remove("fade");
+        void content.offsetWidth;
+        content.classList.add("fade");
+
+        prevBtn.classList.toggle("hidden", step === 0 || submitted);
+        nextBtn.classList.toggle("hidden", submitted);
+        nextBtn.textContent = step === 4 ? "Submit 💌" : "Lanjut ➡";
+        enableNext(false);
+
+        if (step === 0) {
+          content.innerHTML = `
+      <h1 class="text-2xl font-semibold text-center mb-4">🎂 Birthday Mission 🎂</h1>
+      <p class="text-center text-gray-600">
+        Jawab semuanya ya.<br>
+        Nggak bisa di-skip 😌
+      </p>
+    `;
+          enableNext(true);
+        }
+
+        if (step === 1) {
+          content.innerHTML = `
+      <h2 class="text-xl font-semibold mb-4">📍 Where are you now?</h2>
+      <div class="grid gap-3">
+        <button class="option" onclick="select('location','jauh',this)">🌍 Far from me</button>
+        <button class="option" onclick="select('location','hati',this)">❤️ In my heart</button>
+      </div>
+    `;
+        }
+
+        if (step === 2) {
+          content.innerHTML = `
+      <h2 class="text-xl font-semibold mb-3">💭 Seberapa kangen kamu?</h2>
+      <input type="range" min="0" max="100" class="w-full"
+        oninput="answers.missLevel=this.value; enableNext(true)">
+      <p class="text-center text-gray-500 mt-2">(Wajib digeser)</p>
+    `;
+        }
+
+        if (step === 3) {
+          content.innerHTML = `
+      <h2 class="text-xl font-semibold mb-4">💔 Hal tersulit dari jarak kita saat ini?</h2>
+      <div class="grid gap-3">
+        <button class="option" onclick="select('hardest','chat',this)">Cuma bisa chat</button>
+        <button class="option" onclick="select('hardest','peluk',this)">Nggak bisa peluk</button>
+      </div>
+    `;
+        }
+
+        if (step === 4) {
+          content.innerHTML = `
+      <h2 class="text-xl font-semibold mb-3">✨ Kalau kita ketemu nanti hal apa yang kamu mau lakuin…</h2>
+      <input type="text"
+        class="w-full border rounded-lg px-3 py-2"
+        placeholder="Wajib diisi"
+        oninput="answers.firstMeet=this.value; enableNext(this.value.trim()!='')">
+    `;
+        }
+      }
+
+      function select(key, value, el) {
+        answers[key] = value;
+        el.parentNode
+          .querySelectorAll(".option")
+          .forEach((b) => b.classList.remove("selected"));
+        el.classList.add("selected");
+        enableNext(true);
+      }
+
+      nextBtn.onclick = () => {
+        if (step < 4) {
+          step++;
+          render();
+        } else submitForm();
+      };
+      prevBtn.onclick = () => {
+        step--;
+        render();
+      };
+
+      function submitForm() {
+        submitted = true;
+        nav.innerHTML = `
+    <button onclick="openGreeting()"
+    class="w-full px-4 py-3 rounded-xl bg-pink-500 text-white text-lg fade">
+      💖 Buka Ucapan
+    </button>
+  `;
+        content.innerHTML = `
+    <h2 class="text-xl font-semibold text-center mb-3">Terima kasih 🤍</h2>
+    <p class="text-center text-gray-600">
+      Semua jawaban kamu udah aku baca.<br>
+      klik button di bawah untuk baca pesan dari aku.
+    </p>
+  `;
+      }
+
+      function openGreeting() {
+        content.innerHTML = `<p id="typing" class="text-center text-gray-700 leading-relaxed"></p>`;
+        const text = buildGreeting();
+        let i = 0;
+        const el = document.getElementById("typing");
+        el.classList.add("typing");
+        setTimeout(() => {
+          const interval = setInterval(() => {
+            el.innerHTML = text.slice(0, i++);
+            if (i > text.length) {
+              clearInterval(interval);
+              el.classList.remove("typing");
+              launchConfetti();
+            }
+          }, 40);
+        }, 800);
+      }
+
+      function buildGreeting() {
+        return `
+        '17-01-2026'
+        <br>
+        🎉 Selamat ulang tahun my penguin kesayangan 🤍🐧
+<br><br>
+
+Hari ini hari kamu.
+<br>
+Hari di mana aku pengen ada di depan kamu,
+bukan cuma di layar.
+<br>
+Semoga hari ini berjalan baik buat kamu.
+Walaupun kita nggak di tempat yang sama.
+
+<br><br>
+
+Walaupun jarak ini masih jadi penghalang yang misahin kita,
+<br>
+${
+  answers.location === "hati"
+    ? "tapi ternyata aku masih ada di hati kamu 🤍 wkwkwk"
+    : "makasih ya, karena kamu tetap ada sejauh ini."
+}
+
+<br><br>
+
+${
+  answers.missLevel > 80
+    ? "Aku tahu kamu kangen banget. Dan aku juga ngerasain hal yang sama.<br> Maaf ya, hari ini aku belum bisa peluk kamu langsung."
+    : "Walaupun kamu nggak bilang kangen, aku tahu kamu pasti tetap kangen wkwk."
+}
+
+<br><br>
+
+${
+  answers.hardest === "peluk"
+    ? "Dan...nggak bisa peluk kamu itu memang bagian paling berat."
+    : "Kadang cuma bisa chat, tapi itu cukup untuk sekarang."
+}
+
+<br><br>
+
+Nanti saat kita ketemu,
+aku ingat kamu pengen:
+<br>
+<b>${answers.firstMeet}</b>
+
+<br><br>
+
+Semoga kita bisa cepat ketemu,
+<br>
+Sekali lagi, selamat ulang tahun ya emayy
+<br><br>
+Aku sayang kamu 🤍🐧`;
+      }
+
+      function launchConfetti() {
+        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+      }
+
+      render();
+    </script>
+  </body>
+</html>
