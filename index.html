@@ -65,8 +65,10 @@
   <body
     class="bg-gradient-to-br from-pink-100 via-purple-100 to-blue-100 min-h-screen flex items-center justify-center px-4"
   >
-    <!-- 🎵 MUSIC -->
-    <audio autoplay loop>
+    <!-- <audio autoplay loop>
+      <source src="Blue.mp3" type="audio/mpeg" />
+    </audio> -->
+         <audio id="bgm" loop>
       <source src="Blue.mp3" type="audio/mpeg" />
     </audio>
 
@@ -176,7 +178,11 @@
         enableNext(true);
       }
 
+      const bgm = document.getElementById("bgm");
       nextBtn.onclick = () => {
+        if (step === 0) {
+          bgm.play().catch(() => {});
+        }
         if (step < 4) {
           step++;
           render();
